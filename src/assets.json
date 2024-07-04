@@ -1,0 +1,58 @@
+[
+    {
+        "alias": "reelframe",
+        "src": "/assets/ReelFrame.jpg"
+    },
+    {
+        "alias": "background",
+        "src": "/assets/background.jpg"
+    },
+    {
+        "alias": "Reel",
+        "src": "/assets/reel.jpg"
+    },
+    {
+        "alias": "Symbol0",
+        "src": "/assets/1.png"
+    },
+    {
+        "alias": "Symbol1",
+        "src": "/assets/2.png"
+    },
+    {
+        "alias": "Symbol2",
+        "src": "/assets/3.png"
+    },
+    {
+        "alias": "Symbol3",
+        "src": "/assets/4.png"
+    },
+    {
+        "alias": "Symbol4",
+        "src": "/assets/5.png"
+    },
+    {
+        "alias": "Symbol5",
+        "src": "/assets/6.png"
+    },
+    {
+        "alias": "Symbol6",
+        "src": "/assets/7.png"
+    },
+    {
+        "alias": "Symbol7",
+        "src": "/assets/8.png"
+    },
+    {
+        "alias": "Symbol8",
+        "src": "/assets/9.png"
+    },
+    {
+        "alias": "SpinButton",
+        "src": "/assets/spinButton.png"
+    },
+    {
+        "alias": "bgReels",
+        "src": "/assets/woodenBackground.jpg"
+    }
+]
