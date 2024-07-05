@@ -40,4 +40,3 @@ class Game {
     }
 }
 exports.Game = Game;
-//# sourceMappingURL=Game.js.map

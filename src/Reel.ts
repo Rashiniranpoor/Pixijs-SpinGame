@@ -9,6 +9,7 @@ export class Reel {
     reelContainer: Container;
     _index: number;
     _symboles: SymbleController[] = [];
+    _finalSymbols: number[] = [];
     constructor(game: Game, index: number) {
         this._game = game;
         this.reelContainer = new Container();
@@ -42,28 +43,16 @@ export class Reel {
         this._symboles.push(symbol);
     }
 
-
-    showSymbolAfterSpin(symbolId: number[]) {
-        this.removeAllSymbols();
-        for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            this.addSymbol(rowIndex, symbolId[rowIndex], 0);
-        }
-    }
-
     removeSymbol(symbol: SymbleController) {
-        try {
-            this.reelContainer.removeChild(symbol.container);
-            const symIndex = this._symboles.findIndex(sym => sym === symbol);
-            this._symboles.splice(symIndex, 1);
-            this._game.pool.returnSymbleObject(symbol);
-        } catch (error) {
-            (console.error());
-        }
-
+        this.reelContainer.removeChild(symbol.container);
+        const symIndex = this._symboles.findIndex(sym => sym === symbol);
+        this._symboles.splice(symIndex, 1);
+        this._game.pool.returnSymbleObject(symbol);
     }
 
     startRotate() {
         this._game.app.ticker.add(this.rotate, this);
+
     }
 
     removeAllSymbols() {
@@ -72,13 +61,34 @@ export class Reel {
         }
     }
 
+    public showSymbolAfterSpin(symbolArray: number[]) {
+        this._finalSymbols = symbolArray;
+    }
+
+
+    finalRotate = false;
+    timeDelay = 6;
     private rotate(ticker: Ticker) {
         for (const sym of this._symboles) {
-            if (!sym.Move(ticker.deltaTime * 5)) {
+            if (!sym.Move(ticker.deltaTime * this.timeDelay)) {
                 this.removeSymbol(sym);
                 const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
-                console.log("Last symbol [psition: " + lastSymbolPosition);
-                this.addRandomSymbol(0, lastSymbolPosition);
+                if (this._finalSymbols.length > 0) {
+                    this.timeDelay = 3;
+                    this.addSymbol(0, this._finalSymbols[0], lastSymbolPosition);
+                    this._finalSymbols.pop();
+                    if (this._finalSymbols.length == 0) {
+                        this.finalRotate = true;
+                    }
+                }
+                else {
+                    if (this.finalRotate) {
+                        this.addRandomSymbol(0, lastSymbolPosition);
+                        this.stop();
+                    } else {
+                        this.addRandomSymbol(0, lastSymbolPosition);
+                    }
+                }
             }
         }
     }
@@ -86,5 +96,6 @@ export class Reel {
     stop() {
         this._game.app.ticker.remove(this.rotate, this);
     }
+
 
 }

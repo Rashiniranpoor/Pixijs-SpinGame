@@ -27,6 +27,8 @@ export class SymbleController {
         }
     }
 
+
+
     public Move(delta: number) {
         const yLimitPosition = (symbolHeight * rowCount * 0.5);
         if (this.container.position.y - (symbolHeight * 0.5) < yLimitPosition) {

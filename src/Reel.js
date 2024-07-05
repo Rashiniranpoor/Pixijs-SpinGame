@@ -9,6 +9,7 @@ class Reel {
     reelContainer;
     _index;
     _symboles = [];
+    _randomSymbols = [];
     constructor(game, index) {
         this._game = game;
         this.reelContainer = new pixi_js_1.Container();
@@ -37,25 +38,30 @@ class Reel {
         symbol.Init(rowIndex, symbolId, symbolYPosition);
         this._symboles.push(symbol);
     }
-    showSymbolAfterSpin(symbolId) {
-        this.removeAllSymbols();
-        for (let rowIndex = 0; rowIndex < gamesetting_1.rowCount; rowIndex++) {
-            this.addSymbol(rowIndex, symbolId[rowIndex], 0);
-        }
-    }
     removeSymbol(symbol) {
-        try {
-            this.reelContainer.removeChild(symbol.container);
-            const symIndex = this._symboles.findIndex(sym => sym === symbol);
-            this._symboles.splice(symIndex, 1);
-            this._game.pool.returnSymbleObject(symbol);
-        }
-        catch (error) {
-            (console.error());
-        }
+        this.reelContainer.removeChild(symbol.container);
+        const symIndex = this._symboles.findIndex(sym => sym === symbol);
+        this._symboles.splice(symIndex, 1);
+        this._game.pool.returnSymbleObject(symbol);
     }
     startRotate() {
         this._game.app.ticker.add(this.rotate, this);
+    }
+    stopRotate(randomSymbols) {
+        this._randomSymbols = randomSymbols;
+        this._game.app.ticker.add(this.showTheResult, this);
+        this.stop();
+    }
+    showTheResult(ticker) {
+        for (let index = 0; index < this._randomSymbols.length; index++) {
+            while (this._symboles.length > 0) {
+                if (!this._symboles[this._symboles.length - 1].Move(ticker.deltaTime * 5)) {
+                    this.removeSymbol(this._symboles[this._symboles.length - 1]);
+                    const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
+                    this.addSymbol(0, this._randomSymbols[index], lastSymbolPosition);
+                }
+            }
+        }
     }
     removeAllSymbols() {
         while (this._symboles.length > 0) {
@@ -67,14 +73,13 @@ class Reel {
             if (!sym.Move(ticker.deltaTime * 5)) {
                 this.removeSymbol(sym);
                 const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
-                console.log("Last symbol [psition: " + lastSymbolPosition);
                 this.addRandomSymbol(0, lastSymbolPosition);
             }
         }
     }
     stop() {
         this._game.app.ticker.remove(this.rotate, this);
+        this._game.app.ticker.remove(this.showTheResult, this);
     }
 }
 exports.Reel = Reel;
-//# sourceMappingURL=Reel.js.map

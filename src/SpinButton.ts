@@ -38,10 +38,7 @@ export class SpinButton {
 
     private rotate(time: Ticker) {
         this.timer = this.timer + time.deltaTime;
-        if (this.timer > 500) {
-            for (let i = 0; i < this._reel.length; i++) {
-                this._reel[i].stop();
-            }
+        if (this.timer > 100) {
             this.stop();
         }
     }
@@ -49,10 +46,12 @@ export class SpinButton {
     private stop() {
         this.timer = 0;
         this._game.app.ticker.remove(this.rotate, this);
+
         for (let i = 0; i < this._reel.length; i++) {
-            const randomSymbols: number[] = [(i * reelCount) + 0, (i * reelCount) + 1, (i * reelCount) + 2];
+            const randomSymbols: number[] = [(i + reelCount), (i + reelCount), (i + reelCount)];
             this._reel[i].showSymbolAfterSpin(randomSymbols);
         }
+
     }
 
 }

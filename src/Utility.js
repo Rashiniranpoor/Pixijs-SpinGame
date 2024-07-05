@@ -6,4 +6,3 @@ function getRandom(max) {
     return result;
 }
 exports.getRandom = getRandom;
-//# sourceMappingURL=Utility.js.map

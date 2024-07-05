@@ -6,4 +6,3 @@ const Game_1 = require("./Game");
     const game = new Game_1.Game();
     await game.Init();
 })();
-//# sourceMappingURL=index.js.map

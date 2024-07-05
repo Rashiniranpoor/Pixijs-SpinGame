@@ -18,8 +18,7 @@ class SymbleController {
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);
         if (symbolPositionY != 0) {
-            alert(symbolPositionY + gamesetting_1.symbolHeight);
-            this.container.position.set(0, symbolPositionY + gamesetting_1.symbolHeight);
+            this.container.position.set(0, symbolPositionY - gamesetting_1.symbolHeight);
         }
         else {
             this.container.position.set(0, gamesetting_1.symbolHeight - ((rowIndex - 1) * gamesetting_1.symbolHeight));
@@ -37,4 +36,3 @@ class SymbleController {
     }
 }
 exports.SymbleController = SymbleController;
-//# sourceMappingURL=SymbleController.js.map

@@ -23,4 +23,3 @@ class Backgound {
     }
 }
 exports.Backgound = Backgound;
-//# sourceMappingURL=Background.js.map

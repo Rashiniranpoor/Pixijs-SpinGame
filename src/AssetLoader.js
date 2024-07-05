@@ -13,4 +13,3 @@ class AssetLoader {
     }
 }
 exports.AssetLoader = AssetLoader;
-//# sourceMappingURL=AssetLoader.js.map

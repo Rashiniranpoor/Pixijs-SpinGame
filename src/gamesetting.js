@@ -8,4 +8,3 @@ exports.reelCount = 5;
 exports.rowCount = 5;
 exports.windowWidth = 1500;
 exports.windowHeight = 800;
-//# sourceMappingURL=gamesetting.js.map

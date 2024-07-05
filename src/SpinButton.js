@@ -32,21 +32,20 @@ class SpinButton {
     }
     rotate(time) {
         this.timer = this.timer + time.deltaTime;
-        if (this.timer > 500) {
-            for (let i = 0; i < this._reel.length; i++) {
-                this._reel[i].stop();
-            }
+        if (this.timer > 200) {
             this.stop();
         }
     }
     stop() {
         this.timer = 0;
-        this._game.app.ticker.remove(this.rotate, this);
         for (let i = 0; i < this._reel.length; i++) {
             const randomSymbols = [(i * gamesetting_1.reelCount) + 0, (i * gamesetting_1.reelCount) + 1, (i * gamesetting_1.reelCount) + 2];
-            this._reel[i].showSymbolAfterSpin(randomSymbols);
+            this._reel[i].stopRotate(randomSymbols);
+            // const randomSymbols: number[] = [(i * reelCount) + 0, (i * reelCount) + 1, (i * reelCount) + 2];
+            // this._reel[i].showSymbolAfterSpin(randomSymbols);
+            // this._reel[i].stop();
         }
+        this._game.app.ticker.remove(this.rotate, this);
     }
 }
 exports.SpinButton = SpinButton;
-//# sourceMappingURL=SpinButton.js.map
