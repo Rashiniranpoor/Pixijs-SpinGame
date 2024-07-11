@@ -1,50 +1,76 @@
 import { Container, Sprite, Ticker } from "pixi.js";
-import { rowCount, symbolHeight, symbolWidth, symbolType } from './gamesetting';
+import { rowCount, symbolWidth, symbolType, reelCount, symbolHeight } from './gamesetting';
 import { getRandom } from "./Utility";
 import { SymbleController } from "./SymbleController";
 import { Game } from "./Game";
 
 export class Reel {
     _game: Game;
-    reelContainer: Container;
+    _container: Container;
     _index: number;
     _symboles: SymbleController[] = [];
     _finalSymbols: number[] = [];
     constructor(game: Game, index: number) {
         this._game = game;
-        this.reelContainer = new Container();
+        this._container = new Container();
         this._game.pool = game.pool;
         this._index = index;
     }
 
     public Init() {
-        this._game.app.stage.addChild(this.reelContainer);
+        this._game.app.stage.addChild(this._container);
         const reelSprite = Sprite.from("Reel");
         reelSprite.anchor.set(0.5);
-        this.reelContainer.width = symbolWidth;
-        this.reelContainer.height = symbolHeight * rowCount;
-        this.reelContainer.position.set(((this._index - (rowCount / 2) + 0.5) * symbolWidth) + (window.innerWidth / 2), window.innerHeight / 2);
-        this.reelContainer.addChild(reelSprite);
+        this._container.position.set(((this._index - (reelCount * 0.5)) * symbolWidth) + (symbolWidth * 0.5) + (window.innerWidth * 0.5), window.innerHeight * 0.5);
+        this._container.addChild(reelSprite);
 
-        for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-            this.addRandomSymbol(rowIndex, 0);
+        const totalSymbol = rowCount + 2;
+        for (let rowIndex = 0; rowIndex < totalSymbol; rowIndex++) {
+            this.addRandomSymbol();
+        }
+
+        if (this._index == 0) {
+            for (let symbolIndex = 0; symbolIndex < this._symboles.length; symbolIndex++) {
+                console.log("Symbol index : " + symbolIndex + " Symbol name : "
+                    + this._symboles[symbolIndex].container.label
+                    + " Symbol position : " + this._symboles[symbolIndex].container.position.y);
+            }
+        }
+
+    }
+
+    addRandomSymbol() {
+        const symbolId = getRandom(symbolType);
+        this.addSymbol(symbolId);
+    }
+
+    addSymbol(symbolId: number) {
+        let lastSymbolPosition = 0;
+
+        if (this._symboles.length > 0) {
+            lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
+        } else {
+            const totalSymbol = rowCount + 2;
+            lastSymbolPosition = ((totalSymbol * 0.5) + .5) * symbolHeight;
+        }
+
+        const positionY = lastSymbolPosition - symbolHeight;
+
+        const symbol = this._game.pool.getSymbleObject();
+        this._container.addChild(symbol.container);
+        symbol.Init(positionY, symbolId);
+        this._symboles.push(symbol);
+
+
+        if (this._index == 0) {
+            const symIndex = this._symboles.findIndex(sym => sym === symbol);
+            console.log("addSymbol  symbolId : " + symbolId + " symIndex : "
+                + symIndex);
         }
     }
 
-    addRandomSymbol(rowIndex: number, symbolY: number) {
-        const symbolId = getRandom(symbolType);
-        this.addSymbol(rowIndex, symbolId, symbolY);
-    }
-
-    addSymbol(rowIndex: number, symbolId: number, symbolYPosition: number) {
-        const symbol = this._game.pool.getSymbleObject();
-        this.reelContainer.addChild(symbol.container);
-        symbol.Init(rowIndex, symbolId, symbolYPosition);
-        this._symboles.push(symbol);
-    }
-
     removeSymbol(symbol: SymbleController) {
-        this.reelContainer.removeChild(symbol.container);
+        this._container.removeChild(symbol.container);
         const symIndex = this._symboles.findIndex(sym => sym === symbol);
         this._symboles.splice(symIndex, 1);
         this._game.pool.returnSymbleObject(symbol);
@@ -67,15 +93,35 @@ export class Reel {
 
 
     finalRotate = false;
-    timeDelay = 6;
+    static DEFAULT_MOVE_SPEED = 2;
+    moveSpeed = Reel.DEFAULT_MOVE_SPEED;
+    lastSymbolIndex = 0;
     private rotate(ticker: Ticker) {
+        this.lastSymbolIndex = 0;
+
         for (const sym of this._symboles) {
-            if (!sym.Move(ticker.deltaTime * this.timeDelay)) {
+            if (!sym.Move(ticker.deltaTime * this.moveSpeed)) {
                 this.removeSymbol(sym);
-                const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
+                if (this._index == 0) {
+                    const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
+
+                    // console.log("Remove Sym : " + sym.container.label +
+                    //     " \n  last sym index : " + this.lastSymbolIndex +
+                    //     " \n last sym name : " + this._symboles[this.lastSymbolIndex].container.label +
+                    //     " \n last sym position : " + lastSymbolPosition +
+                    //     " \n (this._finalSymbols.length > 0) : " + (this._finalSymbols.length > 0) +
+                    //     " \n (this.finalRotate) : " + (this.finalRotate));
+
+                    // for (let symbolIndex = 0; symbolIndex < this._symboles.length; symbolIndex++) {
+                    //     console.log("Symbol index : " + symbolIndex + " Symbol name : "
+                    //         + this._symboles[symbolIndex].container.label
+                    //         + " Symbol position : " + this._symboles[symbolIndex].container.position.y);
+                    // }
+                }
+
                 if (this._finalSymbols.length > 0) {
-                    this.timeDelay = 3;
-                    this.addSymbol(0, this._finalSymbols[0], lastSymbolPosition);
+                    this.moveSpeed = Reel.DEFAULT_MOVE_SPEED * 0.5;
+                    this.addSymbol(this._finalSymbols[0]);
                     this._finalSymbols.pop();
                     if (this._finalSymbols.length == 0) {
                         this.finalRotate = true;
@@ -83,10 +129,10 @@ export class Reel {
                 }
                 else {
                     if (this.finalRotate) {
-                        this.addRandomSymbol(0, lastSymbolPosition);
+                        this.addRandomSymbol();
                         this.stop();
                     } else {
-                        this.addRandomSymbol(0, lastSymbolPosition);
+                        this.addRandomSymbol();
                     }
                 }
             }
@@ -95,7 +141,7 @@ export class Reel {
 
     stop() {
         this._game.app.ticker.remove(this.rotate, this);
+        this.finalRotate = false;
+        this.moveSpeed = Reel.DEFAULT_MOVE_SPEED
     }
-
-
 }

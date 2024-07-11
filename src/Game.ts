@@ -34,11 +34,11 @@ export class Game {
         document.body.appendChild(this.app.canvas);
         await AssetLoader.load();
         this.background.Init();
-        this.reelFrame.Init();
+
         for (let i: number = 0; i < reelCount; i++) {
             this.reels[i].Init();
         }
-        //this.reelFrame.addBackgroundForReels();
+        this.reelFrame.Init();
         this.spinButton.Init();
     }
 

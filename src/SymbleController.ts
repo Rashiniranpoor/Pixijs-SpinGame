@@ -14,24 +14,18 @@ export class SymbleController {
         this.container.height = symbolHeight;
     }
 
-    public Init(rowIndex: number, id: number, symbolPositionY: number) {
+    public Init(PositionY: number, id: number) {
         const sprite = Sprite.from("Symbol" + id);
         this.container.label = "Symbol" + id;
         sprite.anchor.set(0.5);
         this.container.addChild(sprite);
-        if (symbolPositionY != 0) {
-            this.container.position.set(0, symbolPositionY - symbolHeight);
-        }
-        else {
-            this.container.position.set(0, symbolHeight - ((rowIndex - 1) * symbolHeight));
-        }
+        this.container.position.set(0, PositionY);
     }
 
 
-
     public Move(delta: number) {
-        const yLimitPosition = (symbolHeight * rowCount * 0.5);
-        if (this.container.position.y - (symbolHeight * 0.5) < yLimitPosition) {
+        const yLimitPosition = (symbolHeight * rowCount);
+        if (this.container.position.y < yLimitPosition) {
             this.container.position.y += delta;
             return true;
         } else {

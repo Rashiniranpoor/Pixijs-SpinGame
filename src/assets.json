@@ -4,6 +4,10 @@
         "src": "/assets/ReelFrame.jpg"
     },
     {
+        "alias": "frame",
+        "src": "/assets/ReelFrame_Frame.png"
+    },
+    {
         "alias": "background",
         "src": "/assets/background.jpg"
     },

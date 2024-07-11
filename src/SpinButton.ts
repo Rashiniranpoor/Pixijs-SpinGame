@@ -5,7 +5,7 @@ import { Game } from "./Game";
 
 
 export class SpinButton {
-    spinContainer: Container;
+    _container: Container;
     _game: Game;
     _reel: Reel[];
     timer: number = 0;
@@ -13,15 +13,15 @@ export class SpinButton {
     constructor(game: Game) {
         this._game = game;
         this._reel = game.reels;
-        this.spinContainer = new Container();
-        this.spinContainer.position.x = window.innerWidth / 2;
-        this.spinContainer.position.y = (window.innerHeight / 2) + (symbolHeight * ((rowCount - 2) / 2) + symbolHeight / 2);
+        this._container = new Container();
+        this._container.position.x = window.innerWidth * 0.5;
+        this._container.position.y = (window.innerHeight * 0.5) + (symbolHeight * (rowCount * 0.5) + symbolHeight * 0.5);
     }
 
     public Init() {
-        this._game.app.stage.addChild(this.spinContainer);
+        this._game.app.stage.addChild(this._container);
         const spinButton = Sprite.from("SpinButton");
-        this.spinContainer.addChild(spinButton);
+        this._container.addChild(spinButton);
         spinButton.anchor.set(.5);
         spinButton.on('pointerdown', this.onClick.bind(this));
         spinButton.eventMode = 'static';
