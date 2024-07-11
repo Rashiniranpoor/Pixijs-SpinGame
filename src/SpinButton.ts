@@ -1,8 +1,7 @@
-import { Container, Sprite, Ticker } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import { rowCount, symbolHeight } from "./gamesetting";
 import { Reel } from "./Reel";
 import { Game } from "./Game";
-import { GameServer } from "./GameServer";
 
 
 export class SpinButton {
@@ -30,29 +29,27 @@ export class SpinButton {
     }
 
 
-    onClick() {
+    async onClick() {
         for (let i = 0; i < this._reel.length; i++) {
-            this._reel[i].startRotate();
+            await this._reel[i].startRotate();
         }
-        this._game.app.ticker.add(this.rotate, this);
+
+        const serverData = await this._game.gameServer.getServerData();
+        let reelData: number[] = [];
+        if (serverData._data.length > 0) {
+            for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
+                reelData = [];
+                for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                    reelData.push(serverData._data[(reelIndex + 1) * (rowIndex + 1)])
+                }
+                this._reel[reelIndex].setData(reelData);
+            }
+        }
     }
 
-    private rotate(time: Ticker) {
-        this.timer = this.timer + time.deltaTime;
-        if (this.timer > 150) {
-            this.stop();
-        }
-    }
 
     private stop() {
         this.timer = 0;
-        this._game.app.ticker.remove(this.rotate, this);
-        const gameServer = new GameServer(this._game);
-        gameServer.getServerData();
-        // for (let i = 0; i < this._reel.length; i++) {
-        //     const randomSymbols: number[] = [(i + reelCount), (i + reelCount), (i + reelCount)];
-        //     this._reel[i].setData(randomSymbols);
-        // }
 
     }
 

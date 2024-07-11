@@ -6,6 +6,7 @@ import { reelCount } from "./gamesetting";
 import { AssetLoader } from "./AssetLoader";
 import { SymbleObjectPool } from "./SymbleObjectPool"
 import { SpinButton } from './SpinButton';
+import { GameServer } from "./GameServer";
 
 
 export class Game {
@@ -15,6 +16,7 @@ export class Game {
     public pool: SymbleObjectPool;
     public reels: Reel[] = [];
     public spinButton: SpinButton;
+    public gameServer: GameServer;
 
     public constructor() {
         this.app = new Application();
@@ -27,6 +29,7 @@ export class Game {
         }
 
         this.spinButton = new SpinButton(this);
+        this.gameServer = new GameServer(this);
     }
 
     public async Init() {

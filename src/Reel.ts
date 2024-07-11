@@ -96,27 +96,8 @@ export class Reel {
                 this.removeSymbol(sym);
                 if (this._finalSymbols.length > 0) {
                     this.moveSpeed = Reel.DEFAULT_MOVE_SPEED * 0.5;
-
-
-                    console.log("+++++++++++++++++++++");
-                    let symbols = "";
-                    for (let index = 0; index < this._finalSymbols.length; index++) {
-                        symbols += this._finalSymbols[index] + " _ ";
-                    }
-                    console.log(symbols);
-                    console.log("addSymbol : " + this._finalSymbols[0])
                     this.addSymbol(this._finalSymbols[0]);
                     this._finalSymbols.splice(0, 1);
-                    console.log("££££££££££££££££££££££");
-                    symbols = "";
-                    for (let index = 0; index < this._finalSymbols.length; index++) {
-                        symbols += this._finalSymbols[index] + " _ ";
-
-                    }
-                    console.log(symbols);
-
-
-
                     if (this._finalSymbols.length == 0) {
                         this.finalRotate = true;
                     }
