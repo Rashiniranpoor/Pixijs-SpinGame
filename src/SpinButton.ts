@@ -1,7 +1,8 @@
 import { Container, Sprite, Ticker } from "pixi.js";
-import { reelCount, rowCount, symbolHeight } from "./gamesetting";
+import { rowCount, symbolHeight } from "./gamesetting";
 import { Reel } from "./Reel";
 import { Game } from "./Game";
+import { GameServer } from "./GameServer";
 
 
 export class SpinButton {
@@ -38,7 +39,7 @@ export class SpinButton {
 
     private rotate(time: Ticker) {
         this.timer = this.timer + time.deltaTime;
-        if (this.timer > 100) {
+        if (this.timer > 150) {
             this.stop();
         }
     }
@@ -46,11 +47,12 @@ export class SpinButton {
     private stop() {
         this.timer = 0;
         this._game.app.ticker.remove(this.rotate, this);
-
-        for (let i = 0; i < this._reel.length; i++) {
-            const randomSymbols: number[] = [(i + reelCount), (i + reelCount), (i + reelCount)];
-            this._reel[i].showSymbolAfterSpin(randomSymbols);
-        }
+        const gameServer = new GameServer(this._game);
+        gameServer.getServerData();
+        // for (let i = 0; i < this._reel.length; i++) {
+        //     const randomSymbols: number[] = [(i + reelCount), (i + reelCount), (i + reelCount)];
+        //     this._reel[i].setData(randomSymbols);
+        // }
 
     }
 

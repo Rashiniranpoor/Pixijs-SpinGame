@@ -1,6 +1,6 @@
 import { Container, Sprite, Ticker } from "pixi.js";
 import { rowCount, symbolWidth, symbolType, reelCount, symbolHeight } from './gamesetting';
-import { getRandom } from "./Utility";
+import { getRandom } from './Utility';
 import { SymbleController } from "./SymbleController";
 import { Game } from "./Game";
 
@@ -29,14 +29,6 @@ export class Reel {
             this.addRandomSymbol();
         }
 
-        if (this._index == 0) {
-            for (let symbolIndex = 0; symbolIndex < this._symboles.length; symbolIndex++) {
-                console.log("Symbol index : " + symbolIndex + " Symbol name : "
-                    + this._symboles[symbolIndex].container.label
-                    + " Symbol position : " + this._symboles[symbolIndex].container.position.y);
-            }
-        }
-
     }
 
     addRandomSymbol() {
@@ -46,27 +38,25 @@ export class Reel {
 
     addSymbol(symbolId: number) {
         let lastSymbolPosition = 0;
-
+        let positionY = 0;
         if (this._symboles.length > 0) {
             lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
         } else {
             const totalSymbol = rowCount + 2;
-            lastSymbolPosition = ((totalSymbol * 0.5) + .5) * symbolHeight;
+            lastSymbolPosition = ((totalSymbol * 0.5) + 0.5) * symbolHeight;
         }
 
-        const positionY = lastSymbolPosition - symbolHeight;
+        if (this.finalRotate) {
+            positionY = -200;
+        } else {
+            positionY = lastSymbolPosition - symbolHeight;
+        }
 
         const symbol = this._game.pool.getSymbleObject();
         this._container.addChild(symbol.container);
         symbol.Init(positionY, symbolId);
         this._symboles.push(symbol);
 
-
-        if (this._index == 0) {
-            const symIndex = this._symboles.findIndex(sym => sym === symbol);
-            console.log("addSymbol  symbolId : " + symbolId + " symIndex : "
-                + symIndex);
-        }
     }
 
     removeSymbol(symbol: SymbleController) {
@@ -87,8 +77,10 @@ export class Reel {
         }
     }
 
-    public showSymbolAfterSpin(symbolArray: number[]) {
+    public setData(symbolArray: number[]) {
         this._finalSymbols = symbolArray;
+        console.log("********************");
+        console.log(this._finalSymbols[0] + " , " + this._finalSymbols[1] + " , " + this._finalSymbols[2]);
     }
 
 
@@ -102,27 +94,29 @@ export class Reel {
         for (const sym of this._symboles) {
             if (!sym.Move(ticker.deltaTime * this.moveSpeed)) {
                 this.removeSymbol(sym);
-                if (this._index == 0) {
-                    const lastSymbolPosition = this._symboles[this._symboles.length - 1].container.position.y;
-
-                    // console.log("Remove Sym : " + sym.container.label +
-                    //     " \n  last sym index : " + this.lastSymbolIndex +
-                    //     " \n last sym name : " + this._symboles[this.lastSymbolIndex].container.label +
-                    //     " \n last sym position : " + lastSymbolPosition +
-                    //     " \n (this._finalSymbols.length > 0) : " + (this._finalSymbols.length > 0) +
-                    //     " \n (this.finalRotate) : " + (this.finalRotate));
-
-                    // for (let symbolIndex = 0; symbolIndex < this._symboles.length; symbolIndex++) {
-                    //     console.log("Symbol index : " + symbolIndex + " Symbol name : "
-                    //         + this._symboles[symbolIndex].container.label
-                    //         + " Symbol position : " + this._symboles[symbolIndex].container.position.y);
-                    // }
-                }
-
                 if (this._finalSymbols.length > 0) {
                     this.moveSpeed = Reel.DEFAULT_MOVE_SPEED * 0.5;
+
+
+                    console.log("+++++++++++++++++++++");
+                    let symbols = "";
+                    for (let index = 0; index < this._finalSymbols.length; index++) {
+                        symbols += this._finalSymbols[index] + " _ ";
+                    }
+                    console.log(symbols);
+                    console.log("addSymbol : " + this._finalSymbols[0])
                     this.addSymbol(this._finalSymbols[0]);
-                    this._finalSymbols.pop();
+                    this._finalSymbols.splice(0, 1);
+                    console.log("££££££££££££££££££££££");
+                    symbols = "";
+                    for (let index = 0; index < this._finalSymbols.length; index++) {
+                        symbols += this._finalSymbols[index] + " _ ";
+
+                    }
+                    console.log(symbols);
+
+
+
                     if (this._finalSymbols.length == 0) {
                         this.finalRotate = true;
                     }

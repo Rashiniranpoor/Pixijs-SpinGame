@@ -2,8 +2,6 @@ import { Container, Sprite } from "pixi.js";
 import { symbolWidth, symbolHeight, rowCount } from "./gamesetting"
 import { Game } from "./Game";
 
-
-
 export class SymbleController {
     public container: Container;
     public _game: Game;
