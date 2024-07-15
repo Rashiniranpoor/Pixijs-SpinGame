@@ -10,6 +10,12 @@ export class Reel {
     _index: number;
     _symboles: SymbleController[] = [];
     _finalSymbols: number[] = [];
+    _winIndex: number = 0;
+    finalRotate = false;
+    static DEFAULT_MOVE_SPEED = 2;
+    moveSpeed = Reel.DEFAULT_MOVE_SPEED;
+    lastSymbolIndex = 0;
+
     constructor(game: Game, index: number) {
         this._game = game;
         this._container = new Container();
@@ -17,7 +23,7 @@ export class Reel {
         this._index = index;
     }
 
-    public Init() {
+    public Init(): void {
         this._game.app.stage.addChild(this._container);
         const reelSprite = Sprite.from("Reel");
         reelSprite.anchor.set(0.5);
@@ -31,12 +37,12 @@ export class Reel {
 
     }
 
-    addRandomSymbol() {
+    addRandomSymbol(): void {
         const symbolId = getRandom(symbolType);
         this.addSymbol(symbolId);
     }
 
-    addSymbol(symbolId: number) {
+    addSymbol(symbolId: number): void {
         let lastSymbolPosition = 0;
         let positionY = 0;
         if (this._symboles.length > 0) {
@@ -59,38 +65,33 @@ export class Reel {
 
     }
 
-    removeSymbol(symbol: SymbleController) {
+    removeSymbol(symbol: SymbleController): void {
         this._container.removeChild(symbol.container);
         const symIndex = this._symboles.findIndex(sym => sym === symbol);
         this._symboles.splice(symIndex, 1);
         this._game.pool.returnSymbleObject(symbol);
     }
 
-    startRotate() {
+    startRotate(): void {
         this._game.app.ticker.add(this.rotate, this);
 
     }
 
-    removeAllSymbols() {
+    removeAllSymbols(): void {
         while (this._symboles.length > 0) {
             this.removeSymbol(this._symboles[0]);
         }
     }
 
-    public setData(symbolArray: number[]) {
+    public setData(symbolArray: number[], winIndex: number): void {
         this._finalSymbols = symbolArray;
-        console.log("********************");
-        console.log(this._finalSymbols[0] + " , " + this._finalSymbols[1] + " , " + this._finalSymbols[2]);
+        this._winIndex = winIndex;
     }
 
 
-    finalRotate = false;
-    static DEFAULT_MOVE_SPEED = 2;
-    moveSpeed = Reel.DEFAULT_MOVE_SPEED;
-    lastSymbolIndex = 0;
-    private rotate(ticker: Ticker) {
-        this.lastSymbolIndex = 0;
 
+    private rotate(ticker: Ticker): void {
+        this.lastSymbolIndex = 0;
         for (const sym of this._symboles) {
             if (!sym.Move(ticker.deltaTime * this.moveSpeed)) {
                 this.removeSymbol(sym);
@@ -117,6 +118,18 @@ export class Reel {
     stop() {
         this._game.app.ticker.remove(this.rotate, this);
         this.finalRotate = false;
-        this.moveSpeed = Reel.DEFAULT_MOVE_SPEED
+        this.moveSpeed = Reel.DEFAULT_MOVE_SPEED;
+        console.log("Reel index : " + this._index);
+        this.ShowWinLine();
+    }
+
+    private ShowWinLine() {
+        if (this._winIndex != null || this._winIndex != undefined) {
+            const winSymbolIndex = rowCount - this._winIndex;
+            console.log("Win index for symbols is :" + winSymbolIndex);
+            const winSymbol = this._symboles[winSymbolIndex];
+            console.log("Reel index : " + this._index + " win index : " + winSymbolIndex + " win Symbol : " + winSymbol.container.label);
+            winSymbol.SetColor();
+        }
     }
 }

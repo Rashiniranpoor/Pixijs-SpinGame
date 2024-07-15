@@ -31,18 +31,19 @@ export class SpinButton {
 
     async onClick() {
         for (let i = 0; i < this._reel.length; i++) {
-            await this._reel[i].startRotate();
+            this._reel[i].startRotate();
         }
 
         const serverData = await this._game.gameServer.getServerData();
         let reelData: number[] = [];
-        if (serverData._data.length > 0) {
+        if (serverData._spinData[0]._data.length > 0) {
             for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
                 reelData = [];
                 for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-                    reelData.push(serverData._data[(reelIndex + 1) * (rowIndex + 1)])
+                    reelData.push(serverData._spinData[0]._data[(reelIndex + 1) * (rowIndex + 1)])
                 }
-                this._reel[reelIndex].setData(reelData);
+                console.log("Selected Point for reel " + reelIndex + " is :" + serverData._spinData[0]._winLines[reelIndex]._y);
+                this._reel[reelIndex].setData(reelData, serverData._spinData[0]._winLines[reelIndex]._y);
             }
         }
     }
