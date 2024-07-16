@@ -19,7 +19,7 @@ export class ReelFrame {
         background.x = this._game.app.screen.width / 2;
         background.y = this._game.app.screen.height / 2;
 
-        this._container.visible = false;
+        //this._container.visible = false;
     }
 
     public addBackgroundForReels() {

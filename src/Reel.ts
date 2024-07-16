@@ -119,16 +119,13 @@ export class Reel {
         this._game.app.ticker.remove(this.rotate, this);
         this.finalRotate = false;
         this.moveSpeed = Reel.DEFAULT_MOVE_SPEED;
-        console.log("Reel index : " + this._index);
         this.ShowWinLine();
     }
 
     private ShowWinLine() {
-        if (this._winIndex != null || this._winIndex != undefined) {
+        if (this._winIndex != -1) {
             const winSymbolIndex = rowCount - this._winIndex;
-            console.log("Win index for symbols is :" + winSymbolIndex);
             const winSymbol = this._symboles[winSymbolIndex];
-            console.log("Reel index : " + this._index + " win index : " + winSymbolIndex + " win Symbol : " + winSymbol.container.label);
             winSymbol.SetColor();
         }
     }

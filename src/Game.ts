@@ -7,6 +7,7 @@ import { AssetLoader } from "./AssetLoader";
 import { SymbleObjectPool } from "./SymbleObjectPool"
 import { SpinButton } from './SpinButton';
 import { GameServer } from "./GameServer";
+import { WinText } from './WinText';
 
 
 export class Game {
@@ -17,6 +18,7 @@ export class Game {
     public reels: Reel[] = [];
     public spinButton: SpinButton;
     public gameServer: GameServer;
+    public winText: WinText;
 
     public constructor() {
         this.app = new Application();
@@ -30,6 +32,7 @@ export class Game {
 
         this.spinButton = new SpinButton(this);
         this.gameServer = new GameServer(this);
+        this.winText = new WinText(this);
     }
 
     public async Init() {
@@ -43,6 +46,7 @@ export class Game {
         }
         this.reelFrame.Init();
         this.spinButton.Init();
+        this.winText.Init();
     }
 
 }
