@@ -8,7 +8,7 @@ export class SpinButton {
     _game: Game;
     _reel: Reel[];
     timer: number = 0;
-    delayBonusTime = 8000;
+    delayShowTime = 10000;
 
     constructor(game: Game) {
         this._game = game;
@@ -41,7 +41,6 @@ export class SpinButton {
         let reelData: number[] = [];
         const serverData = await this._game.gameServer.getServerData();
         if (serverData._spinData.length > 0 && serverData._spinData[0]._data.length > 0) {
-
             if (serverData._spinData.length > 0 && serverData._spinData[spinIndex]._data.length > 0) {
                 for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
                     reelData = [];
@@ -57,7 +56,7 @@ export class SpinButton {
                 winValue.text = serverData._spinData[spinIndex]._win;
                 this._game.winText.SetText(winValue);
                 if (spinIndex + 1 < serverData._spinData.length) {
-                    await new Promise(resolve => setTimeout(resolve, this.delayBonusTime));
+                    await new Promise(resolve => setTimeout(resolve, this.delayShowTime));
                     this.RotateReels(spinIndex + 1);
                 }
             }

@@ -37,4 +37,8 @@ export class SymbleController {
         this._sprite.tint = 'red';
     }
 
+    public SetDefaultColor() {
+        this._sprite.tint = 'white';
+    }
+
 }

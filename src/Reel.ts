@@ -92,6 +92,7 @@ export class Reel {
 
     private rotate(ticker: Ticker): void {
         this.lastSymbolIndex = 0;
+        this.ClearWin();
         for (const sym of this._symboles) {
             if (!sym.Move(ticker.deltaTime * this.moveSpeed)) {
                 this.removeSymbol(sym);
@@ -115,18 +116,26 @@ export class Reel {
         }
     }
 
-    stop() {
+    async stop() {
         this._game.app.ticker.remove(this.rotate, this);
         this.finalRotate = false;
         this.moveSpeed = Reel.DEFAULT_MOVE_SPEED;
-        this.ShowWinLine();
+        await this.ShowWinLine();
     }
 
-    private ShowWinLine() {
+    private async ShowWinLine() {
         if (this._winIndex != -1) {
             const winSymbolIndex = rowCount - this._winIndex;
             const winSymbol = this._symboles[winSymbolIndex];
             winSymbol.SetColor();
+        }
+    }
+
+    public ClearWin() {
+        if (this._winIndex != -1) {
+            const winSymbolIndex = rowCount - this._winIndex;
+            const winSymbol = this._symboles[winSymbolIndex];
+            winSymbol.SetDefaultColor();
         }
     }
 }
