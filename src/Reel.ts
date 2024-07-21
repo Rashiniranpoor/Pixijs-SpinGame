@@ -74,7 +74,6 @@ export class Reel {
 
     startRotate(): void {
         this._game.app.ticker.add(this.rotate, this);
-
     }
 
     removeAllSymbols(): void {

@@ -8,8 +8,9 @@ export class SpinButton {
     _game: Game;
     _reel: Reel[];
     timer: number = 0;
-    delayForShow = 2000;
-    delayForBonus = 7000;
+    reelDelay = 500;
+    showDelay = 2000;
+    bonusDelay = 7000;
 
     constructor(game: Game) {
         this._game = game;
@@ -32,12 +33,12 @@ export class SpinButton {
 
     async onClick(spinIndex: number) {
         this.RotateReels(spinIndex);
-
     }
 
     async RotateReels(spinIndex: number) {
         for (let i = 0; i < this._reel.length; i++) {
             this._reel[i].startRotate();
+            await new Promise(resolve => setTimeout(resolve, this.reelDelay));
         }
         let reelData: number[] = [];
         const serverData = await this._game.gameServer.getServerData();
@@ -48,27 +49,23 @@ export class SpinButton {
                     for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
                         reelData.push(serverData._spinData[spinIndex]._data[(reelIndex + 1) * (rowIndex + 1)])
                     }
-                    if (serverData._spinData[0]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined)
+                    if (serverData._spinData[0]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined) {
                         this._reel[reelIndex].setData(reelData, serverData._spinData[spinIndex]._winLines[reelIndex]._y);
-                    else
+                    } else {
                         this._reel[reelIndex].setData(reelData, -1);
+                    }
                 }
                 const winValue: AbstractText = new BitmapText;
                 winValue.text = serverData._spinData[spinIndex]._win;
-                await new Promise(resolve => setTimeout(resolve, this.delayForBonus));
+                await new Promise(resolve => setTimeout(resolve, this.bonusDelay));
                 this._game.winText.SetText(winValue);
                 if (spinIndex + 1 < serverData._spinData.length) {
-                    await new Promise(resolve => setTimeout(resolve, this.delayForShow));
+                    await new Promise(resolve => setTimeout(resolve, this.showDelay));
                     this.RotateReels(spinIndex + 1);
                 }
             }
 
         }
-    }
-
-    private stop() {
-        this.timer = 0;
-
     }
 
 }
