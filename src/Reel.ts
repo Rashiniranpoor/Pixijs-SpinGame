@@ -120,10 +120,10 @@ export class Reel {
         this._game.app.ticker.remove(this.rotate, this);
         this.finalRotate = false;
         this.moveSpeed = Reel.DEFAULT_MOVE_SPEED;
-        await this.ShowWinLine();
+        this.ShowWinLine();
     }
 
-    private async ShowWinLine() {
+    private ShowWinLine() {
         if (this._winIndex != -1) {
             const winSymbolIndex = rowCount - this._winIndex;
             const winSymbol = this._symboles[winSymbolIndex];
