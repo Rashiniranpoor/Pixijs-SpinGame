@@ -42,30 +42,32 @@ export class SpinButton {
         }
         let reelData: number[] = [];
         const serverData = await this._game.gameServer.getServerData();
-        if (serverData._spinData.length > 0 && serverData._spinData[0]._data.length > 0) {
-            if (serverData._spinData.length > 0 && serverData._spinData[spinIndex]._data.length > 0) {
-                for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
-                    reelData = [];
-                    for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-                        reelData.push(serverData._spinData[spinIndex]._data[(reelIndex + 1) * (rowIndex + 1)])
-                    }
-                    if (serverData._spinData[0]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined) {
-                        this._reel[reelIndex].setData(reelData, serverData._spinData[spinIndex]._winLines[reelIndex]._y);
-                    } else {
-                        this._reel[reelIndex].setData(reelData, -1);
-                    }
+        if (serverData._spinData.length > 0 && serverData._spinData[spinIndex]._data.length > 0) {
+            for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
+                reelData = [];
+                for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
+                    reelData.push(serverData._spinData[spinIndex]._data[(reelIndex + 1) * (rowIndex + 1)])
                 }
-                const winValue: AbstractText = new BitmapText;
-                winValue.text = serverData._spinData[spinIndex]._win;
-                await new Promise(resolve => setTimeout(resolve, this.bonusDelay));
-                this._game.winText.SetText(winValue);
-                if (spinIndex + 1 < serverData._spinData.length) {
-                    await new Promise(resolve => setTimeout(resolve, this.showDelay));
-                    this.RotateReels(spinIndex + 1);
+                if (serverData._spinData[0]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined) {
+                    this._reel[reelIndex].setData(reelData, serverData._spinData[spinIndex]._winLines[reelIndex]._y);
+                } else {
+                    this._reel[reelIndex].setData(reelData, -1);
                 }
             }
+            await new Promise(resolve => setTimeout(resolve, this.bonusDelay));
+            this.AssignText(serverData._spinData[spinIndex]._win);
 
+            if (spinIndex + 1 < serverData._spinData.length) {
+                await new Promise(resolve => setTimeout(resolve, this.showDelay));
+                this.RotateReels(spinIndex + 1);
+            }
         }
+    }
+
+    AssignText(_win: number) {
+        const bmText: AbstractText = new BitmapText;
+        bmText.text = _win;
+        this._game.winText.SetText(bmText);
     }
 
 }

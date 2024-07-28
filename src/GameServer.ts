@@ -10,6 +10,8 @@ export class GameServer {
     timer: number = 0;
     MIN_TIMER = 2000;
     MAX_TIMER = 7000;
+    randomSymbols: number[] = [];
+    spinData: SpinData[] = [];
 
     constructor(game: Game) {
         this._game = game;
@@ -24,20 +26,17 @@ export class GameServer {
     }
 
     private GetData(): ServerData {
-        const randomSymbols: number[] = [];
-        const spinData: SpinData[] = [];
-
+        this.randomSymbols = [];
+        this.spinData = [];
         for (let index = 0; index < reelCount * rowCount; index++) {
-            randomSymbols.push(getRandom(9));
+            this.randomSymbols.push(getRandom(9));
         }
-        spinData.push(new SpinData(randomSymbols, this.GetWinLine(), this.GetWin()));
-
-        for (let index = 0; index < reelCount * rowCount; index++) {
-            randomSymbols.push(getRandom(9));
+        this.spinData.push(new SpinData(this.randomSymbols, this.GetWinLine(), this.GetWin()));
+        const serverData: ServerData = new ServerData(this.spinData);
+        const hasFreeSpin = getLimitedRandom(0, 1);
+        if (hasFreeSpin) {
+            this.GetFreeSpinData();
         }
-        spinData.push(new SpinData(randomSymbols, this.GetWinLine(), this.GetWin()));
-
-        const serverData: ServerData = new ServerData(spinData);
         return serverData;
 
     }
@@ -51,12 +50,17 @@ export class GameServer {
         return [point1, point2, point3, point4, point5];
     }
 
-    private GetFreeSpinData(): number[] {
-        return [];
+    private GetFreeSpinData(): ServerData {
+        for (let index = 0; index < reelCount * rowCount; index++) {
+            this.randomSymbols.push(getRandom(9));
+        }
+        this.spinData.push(new SpinData(this.randomSymbols, this.GetWinLine(), this.GetWin()));
+        const serverData: ServerData = new ServerData(this.spinData);
+        return serverData;
     }
 
     private GetWin(): number {
-        return 1000;
+        return getLimitedRandom(200, 2000);
     }
 
 }
