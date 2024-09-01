@@ -25,6 +25,7 @@
     "author": "Rashin",
     "license": "MIT",
     "dependencies": {
+        "@pixi/devtools": "^2.0.1",
         "core-js": "^3.34.0",
         "pixi-spine": "^4.0.4",
         "pixi.js": "^8.1.5"

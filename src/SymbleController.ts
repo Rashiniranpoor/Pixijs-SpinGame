@@ -15,11 +15,17 @@ export class SymbleController {
     }
 
     public Init(PositionY: number, id: number) {
-        this._sprite = Sprite.from("Symbol" + id);
-        this.container.label = "Symbol" + id;
-        this._sprite.anchor.set(0.5);
-        this.container.addChild(this._sprite);
-        this.container.position.set(0, PositionY);
+        try {
+            this._sprite = Sprite.from("Symbol" + id);
+            this.container.label = "Symbol" + id;
+            this._sprite.anchor.set(0.5);
+            this.container.addChild(this._sprite);
+            this.container.position.set(0, PositionY);
+        } catch (exc) {
+            console.log("ID is : " + id);
+            console.log(exc);
+        }
+
     }
 
 

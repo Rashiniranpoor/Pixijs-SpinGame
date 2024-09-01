@@ -30,7 +30,6 @@ export class SpinButton {
         spinButton.cursor = "pointer";
     }
 
-
     async onClick(spinIndex: number) {
         this.RotateReels(spinIndex);
     }

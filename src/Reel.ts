@@ -34,7 +34,6 @@ export class Reel {
         for (let rowIndex = 0; rowIndex < totalSymbol; rowIndex++) {
             this.addRandomSymbol();
         }
-
     }
 
     addRandomSymbol(): void {
@@ -61,11 +60,13 @@ export class Reel {
         const symbol = this._game.pool.getSymbleObject();
         this._container.addChild(symbol.container);
         symbol.Init(positionY, symbolId);
+
         this._symboles.push(symbol);
 
     }
 
     removeSymbol(symbol: SymbleController): void {
+        symbol.container.removeChildren();
         this._container.removeChild(symbol.container);
         const symIndex = this._symboles.findIndex(sym => sym === symbol);
         this._symboles.splice(symIndex, 1);
@@ -86,8 +87,6 @@ export class Reel {
         this._finalSymbols = symbolArray;
         this._winIndex = winIndex;
     }
-
-
 
     private rotate(ticker: Ticker): void {
         this.lastSymbolIndex = 0;

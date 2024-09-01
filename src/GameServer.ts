@@ -38,7 +38,6 @@ export class GameServer {
             this.GetFreeSpinData();
         }
         return serverData;
-
     }
 
     private GetWinLine(): Point[] {

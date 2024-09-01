@@ -1,5 +1,7 @@
+
 export function getRandom(max: number) {
-    const result = Math.floor(Math.random() * max);
+    const random = Math.random();
+    const result = Math.floor(random * max);
     return result;
 }
 

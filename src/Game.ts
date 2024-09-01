@@ -8,6 +8,8 @@ import { SymbleObjectPool } from "./SymbleObjectPool"
 import { SpinButton } from './SpinButton';
 import { GameServer } from "./GameServer";
 import { WinText } from './WinText';
+import { initDevtools } from "@pixi/devtools";
+
 
 
 export class Game {
@@ -22,6 +24,10 @@ export class Game {
 
     public constructor() {
         this.app = new Application();
+
+        initDevtools(this.app);
+        window.__PIXI_APP__ = this.app;
+
         this.pool = new SymbleObjectPool(this, 25);
         this.background = new Backgound(this);
         this.reelFrame = new ReelFrame(this);
