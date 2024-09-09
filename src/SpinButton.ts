@@ -41,13 +41,16 @@ export class SpinButton {
         }
         let reelData: number[] = [];
         const serverData = await this._game.gameServer.getServerData();
+        let tempIndex = 0;
         if (serverData._spinData.length > 0 && serverData._spinData[spinIndex]._data.length > 0) {
             for (let reelIndex = 0; reelIndex < this._reel.length; reelIndex++) {
                 reelData = [];
                 for (let rowIndex = 0; rowIndex < rowCount; rowIndex++) {
-                    reelData.push(serverData._spinData[spinIndex]._data[(reelIndex + 1) * (rowIndex + 1)])
+                    console.log(serverData._spinData[spinIndex]._data[tempIndex]);
+                    reelData.push(serverData._spinData[spinIndex]._data[tempIndex]);//(reelIndex + 1) * (rowIndex + 1)]);
+                    tempIndex += 1;
                 }
-                if (serverData._spinData[0]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined) {
+                if (serverData._spinData[spinIndex]._winLines[reelIndex] != null || serverData._spinData[spinIndex]._winLines[reelIndex] != undefined) {
                     this._reel[reelIndex].setData(reelData, serverData._spinData[spinIndex]._winLines[reelIndex]._y);
                 } else {
                     this._reel[reelIndex].setData(reelData, -1);

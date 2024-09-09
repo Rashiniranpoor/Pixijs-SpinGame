@@ -29,7 +29,8 @@ export class GameServer {
         this.randomSymbols = [];
         this.spinData = [];
         for (let index = 0; index < reelCount * rowCount; index++) {
-            this.randomSymbols.push(getRandom(9));
+            const randomData = getRandom(9);
+            this.randomSymbols.push(randomData);
         }
         this.spinData.push(new SpinData(this.randomSymbols, this.GetWinLine(), this.GetWin()));
         const serverData: ServerData = new ServerData(this.spinData);
